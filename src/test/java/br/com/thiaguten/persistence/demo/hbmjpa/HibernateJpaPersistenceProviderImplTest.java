@@ -33,7 +33,6 @@ package br.com.thiaguten.persistence.demo.hbmjpa;
 
 import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
-import br.com.thiaguten.persistence.demo.hbmcore.HibernatePersistenceProviderImplTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ import static org.testng.Assert.assertNull;
 @ContextConfiguration(locations = {"classpath:spring/persistence-hibernate-jpa-appContext.xml"})
 public class HibernateJpaPersistenceProviderImplTest extends AbstractTransactionalTestNGSpringContextTests {
 
-    private static final Logger log = LoggerFactory.getLogger(HibernatePersistenceProviderImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(HibernateJpaPersistenceProviderImplTest.class);
 
     @Autowired
     @Qualifier("userJpaDAO")
