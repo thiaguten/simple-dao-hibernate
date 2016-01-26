@@ -30,9 +30,19 @@
         <developer>
             <name>Thiago Gutenberg Carvalho da Costa</name>
             <email>thiaguten@gmail.com</email>
-            <timezone>-3</timezone>
+            <url>http://www.thiaguten.com.br</url>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>America/Sao_Paulo</timezone>
         </developer>
     </developers>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/thiaguten/simple-dao-hibernate/issues</url>
+    </issueManagement>
 
     <scm>
         <connection>scm:git:git@github.com:thiaguten/simple-dao-hibernate.git</connection>
