@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <description>
+        Spring Hibernate XML configurations - Object Relational Mapping (ORM) Data Access
+        See: http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#orm
+    </description>
+
+    <context:annotation-config/>
+
+    <context:component-scan base-package="br.com.thiaguten.persistence.demo.spring.hibernate"/>
+
+    <bean id="hibernatePersistenceService"
+          class="br.com.thiaguten.persistence.demo.spring.hibernate.dao.provider.HibernatePersistenceProviderSpringImpl"/>
+
+    <bean id="userHibernateDAO" class="br.com.thiaguten.persistence.demo.spring.hibernate.dao.UserDAOHibernateImpl">
+        <property name="persistenceProvider" ref="hibernatePersistenceService"/>
+    </bean>
+
+    <!-- HikariCP configuration -->
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="poolName" value="SpringHikariCP"/>
+
+        <property name="maximumPoolSize" value="100"/>
+        <property name="idleTimeout" value="30000"/>
+        <property name="connectionTestQuery" value="SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES"/>
+
+        <property name="dataSourceClassName" value="org.hsqldb.jdbc.JDBCDataSource"/>
+        <property name="dataSourceProperties">
+            <props>
+                <prop key="url">jdbc:hsqldb:mem:hbmspringtestdb;shutdown=true</prop>
+                <prop key="user">SA</prop>
+                <prop key="password"></prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <constructor-arg ref="hikariConfig"/>
+    </bean>
+
+    <!-- Hibernate SessionFactory configuration -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--
+            Cant use this config because hibernate.current_session_context_class interferes with Spring-managed transactions
+            See: http://stackoverflow.com/questions/4293098/how-to-integrate-spring-with-hibernate-session-and-transaction-management
+        <property name="configLocation" value="hibernate.cfg.xml"/>
+        -->
+        <property name="packagesToScan" value="br.com.thiaguten.persistence.demo"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.format_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.internal.NoCachingRegionFactory</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="hibernateTransactionManager"/>
+
+</beans>
