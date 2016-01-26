@@ -42,8 +42,9 @@ import org.springframework.test.context.testng.AbstractTransactionalTestNGSpring
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import java.util.List;
+
+import static org.testng.Assert.*;
 
 @ContextConfiguration(locations = {"classpath:spring/persistence-hibernate-appContext.xml"})
 public class HibernatePersistenceProviderImplTest extends AbstractTransactionalTestNGSpringContextTests {
@@ -68,27 +69,37 @@ public class HibernatePersistenceProviderImplTest extends AbstractTransactionalT
         User userSave = userDAO.save(user);
         log.info("Created: " + userSave);
 
+        List<User> users = userDAO.findByName(userSave.getName());
+        log.info("Searched: " + userSave);
+        assertNotNull(users);
+        assertEquals(users.get(0).getName(), userSave.getName());
+
         // read
         User userSavedFound = userDAO.findById(userSave.getId());
         log.info("Read: " + userSavedFound);
+        assertNotNull(userSavedFound);
         assertEquals(userSavedFound.getName(), userSave.getName());
 
         // update
         userSavedFound.setName("VALENTINA");
+        assertNotNull(userSavedFound.getId());
         User userUpdate = userDAO.update(userSavedFound);
         log.info("Updated: " + userUpdate);
 
         // read
+        assertNotNull(userUpdate.getId());
         User userUpdatedFound = userDAO.findById(userUpdate.getId());
         log.info("Read: " + userUpdatedFound);
+        assertNotNull(userUpdatedFound);
         assertEquals(userUpdatedFound.getName(), userUpdate.getName());
 
         // delete
-        userDAO.delete(userUpdate);
-        log.info("Deleted: " + userUpdate);
+        userDAO.delete(userUpdatedFound);
+        log.info("Deleted: " + userUpdatedFound);
 
         // read
-        User userDeleted = userDAO.findById(userUpdate.getId());
+        assertNotNull(userUpdatedFound.getId());
+        User userDeleted = userDAO.findById(userUpdatedFound.getId());
         log.info("Read: " + userDeleted);
         assertNull(userDeleted);
     }
