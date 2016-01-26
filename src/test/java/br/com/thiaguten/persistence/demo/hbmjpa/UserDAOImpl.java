@@ -1,7 +1,7 @@
 /*
  * #%L
  * %%
- * Copyright (C) 2015 - 2016 Thiago Gutenberg Carvalho da Costa.
+ * Copyright (C) 2016 Thiago Gutenberg Carvalho da Costa.
  * %%
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -29,18 +29,46 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package br.com.thiaguten.persistence.demo.manual.hibernate.dao;
+package br.com.thiaguten.persistence.demo.hbmjpa;
 
 import br.com.thiaguten.persistence.dao.GenericBaseDAO;
 import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
-import br.com.thiaguten.persistence.demo.manual.hibernate.dao.provider.HibernatePersistenceProviderManualImpl;
-import br.com.thiaguten.persistence.spi.PersistenceProvider;
+import br.com.thiaguten.persistence.spi.provider.hibernate.HibernateCriteriaPersistenceProvider;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
-public class UserDAOHibernateImpl extends GenericBaseDAO<User, Long> implements UserDAO {
+import java.util.Collections;
+import java.util.List;
+
+@Repository("userJpaDAO")
+public class UserDAOImpl extends GenericBaseDAO<User, Long> implements UserDAO {
+
+    private HibernateCriteriaPersistenceProvider persistenceProvider;
 
     @Override
-    public PersistenceProvider getPersistenceProvider() {
-        return new HibernatePersistenceProviderManualImpl();
+    public HibernateCriteriaPersistenceProvider getPersistenceProvider() {
+        return persistenceProvider;
+    }
+
+    @Autowired
+    @Qualifier("hibernateJpaPersistenceProvider")
+    public void setPersistenceProvider(HibernateCriteriaPersistenceProvider persistenceProvider) {
+        this.persistenceProvider = persistenceProvider;
+    }
+
+    @Override
+    public List<User> findByName(String name) {
+        List<Criterion> criterions = Collections.singletonList(Restrictions.ilike("name", name, MatchMode.ANYWHERE));
+        List<User> results = persistenceProvider.findByCriteria(getEntityClass(), criterions);
+        if (results.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return Collections.unmodifiableList(results);
+        }
     }
 }

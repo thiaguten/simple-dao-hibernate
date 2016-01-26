@@ -1,7 +1,7 @@
 /*
  * #%L
  * %%
- * Copyright (C) 2015 - 2016 Thiago Gutenberg Carvalho da Costa.
+ * Copyright (C) 2016 Thiago Gutenberg Carvalho da Costa.
  * %%
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -29,35 +29,69 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package br.com.thiaguten.persistence.demo.spring.hibernate.dao.provider;
+package br.com.thiaguten.persistence.demo.hbmjpa;
 
+import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
-import br.com.thiaguten.persistence.demo.spring.AbstractPersistenceProviderSpringTest;
+import br.com.thiaguten.persistence.demo.hbmcore.HibernatePersistenceProviderImplTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = {"classpath:spring/persistence-hibernate-appContext.xml"})
-public class HibernatePersistenceProviderSpringImplTest extends AbstractPersistenceProviderSpringTest {
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
-    private static final Logger LOG = LoggerFactory.getLogger(HibernatePersistenceProviderSpringImplTest.class);
+@ContextConfiguration(locations = {"classpath:spring/persistence-hibernate-jpa-appContext.xml"})
+public class HibernateJpaPersistenceProviderImplTest extends AbstractTransactionalTestNGSpringContextTests {
+
+    private static final Logger log = LoggerFactory.getLogger(HibernatePersistenceProviderImplTest.class);
 
     @Autowired
-    @Qualifier("userHibernateDAO")
+    @Qualifier("userJpaDAO")
     private UserDAO userDAO;
 
     @BeforeClass
     public static void init() {
-        LOG.info("***********************************************");
-        LOG.info("HIBERNATE CORE SPRING - Transactions Management");
-        LOG.info("***********************************************");
+        log.info("******************************");
+        log.info("HIBERNATE ENTITYMANAGER SPRING");
+        log.info("******************************");
     }
 
-    @Override
-    public UserDAO getUserDAO() {
-        return userDAO;
+    @Test
+    public void crudTest() {
+        // create
+        User user = new User("THIAGO");
+        User userSave = userDAO.save(user);
+        log.info("Created: " + userSave);
+
+        // read
+        User userSavedFound = userDAO.findById(userSave.getId());
+        log.info("Read: " + userSavedFound);
+        assertEquals(userSavedFound.getName(), userSave.getName());
+
+        // update
+        userSavedFound.setName("VALENTINA");
+        User userUpdate = userDAO.update(userSavedFound);
+        log.info("Updated: " + userUpdate);
+
+        // read
+        User userUpdatedFound = userDAO.findById(userUpdate.getId());
+        log.info("Read: " + userUpdatedFound);
+        assertEquals(userUpdatedFound.getName(), userUpdate.getName());
+
+        // delete
+        userDAO.delete(userUpdate);
+        log.info("Deleted: " + userUpdate);
+
+        // read
+        User userDeleted = userDAO.findById(userUpdate.getId());
+        log.info("Read: " + userDeleted);
+        assertNull(userDeleted);
     }
+
 }

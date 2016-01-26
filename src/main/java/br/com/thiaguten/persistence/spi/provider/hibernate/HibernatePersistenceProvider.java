@@ -299,7 +299,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
                 criteria.add(c);
             }
         }
-        return HibernateUtils.criteriaRange(criteria, firstResult, maxResults).setCacheable(cacheable).list();
+        return criteriaRange(criteria, firstResult, maxResults).setCacheable(cacheable).list();
     }
 
     /**
@@ -353,12 +353,12 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
     /**
      * Count by criteria
      *
-     * @param entityClazz the entity class
-     * @param resultClazz the result class
+     * @param entityClazz       the entity class
+     * @param resultClazz       the result class
      * @param resultTransformer strategy for transforming query results
-     * @param criterions  the criterions
-     * @param <T>         entity
-     * @param <N>         number pojo
+     * @param criterions        the criterions
+     * @param <T>               entity
+     * @param <N>               number pojo
      * @return the count
      */
     @Override
@@ -386,5 +386,17 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
             t = entity;
         }
         getSession().delete(t);
+    }
+
+    private Criteria criteriaRange(Criteria criteria, int firstResult, int maxResults) {
+        if (criteria != null) {
+            if (maxResults >= 0) {
+                criteria.setMaxResults(maxResults);
+            }
+            if (firstResult >= 0) {
+                criteria.setFirstResult(firstResult);
+            }
+        }
+        return criteria;
     }
 }

@@ -29,7 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package br.com.thiaguten.persistence.demo.spring.hibernate.dao.provider;
+package br.com.thiaguten.persistence.demo.hbmcore;
 
 import br.com.thiaguten.persistence.Persistable;
 import br.com.thiaguten.persistence.spi.provider.hibernate.HibernatePersistenceProvider;
@@ -38,6 +38,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,8 @@ import java.util.List;
 import java.util.Map;
 
 @Transactional(readOnly = true)
-public class HibernatePersistenceProviderSpringImpl extends HibernatePersistenceProvider {
+@Service("hibernatePersistenceProvider")
+public class HibernatePersistenceProviderImpl extends HibernatePersistenceProvider {
 
     private SessionFactory sessionFactory;
 

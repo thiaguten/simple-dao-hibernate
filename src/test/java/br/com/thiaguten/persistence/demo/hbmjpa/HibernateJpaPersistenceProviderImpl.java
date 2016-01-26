@@ -1,7 +1,7 @@
 /*
  * #%L
  * %%
- * Copyright (C) 2015 - 2016 Thiago Gutenberg Carvalho da Costa.
+ * Copyright (C) 2016 Thiago Gutenberg Carvalho da Costa.
  * %%
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -29,12 +29,13 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package br.com.thiaguten.persistence.demo.spring.hibernate.dao.provider;
+package br.com.thiaguten.persistence.demo.hbmjpa;
 
 import br.com.thiaguten.persistence.Persistable;
 import br.com.thiaguten.persistence.spi.provider.hibernate.HibernateJpaPersistenceProvider;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.transform.ResultTransformer;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +46,8 @@ import java.util.List;
 import java.util.Map;
 
 @Transactional(readOnly = true)
-public class HibernateJpaPersistenceProviderSpringImpl extends HibernateJpaPersistenceProvider {
+@Service("hibernateJpaPersistenceProvider")
+public class HibernateJpaPersistenceProviderImpl extends HibernateJpaPersistenceProvider {
 
     private EntityManager entityManager;
 
@@ -81,6 +83,11 @@ public class HibernateJpaPersistenceProviderSpringImpl extends HibernateJpaPersi
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public <T extends Persistable<? extends Serializable>, PK extends Serializable> void deleteById(Class<T> entityClazz, PK pk) {
         super.deleteById(entityClazz, pk);
+    }
+
+    @Override
+    public <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, ResultTransformer resultTransformer, List<Criterion> criterions) {
+        return super.countByCriteria(entityClazz, resultClazz, resultTransformer, criterions);
     }
 
     @Override
@@ -156,10 +163,5 @@ public class HibernateJpaPersistenceProviderSpringImpl extends HibernateJpaPersi
     @Override
     public <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, List<Criterion> criterions) {
         return super.countByCriteria(entityClazz, resultClazz, criterions);
-    }
-
-    @Override
-    public <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, ResultTransformer resultTransformer, List<Criterion> criterions) {
-        return super.countByCriteria(entityClazz, resultClazz, resultTransformer, criterions);
     }
 }

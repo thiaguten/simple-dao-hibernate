@@ -7,9 +7,9 @@
     <session-factory>
         <!-- Database connection settings -->
         <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
-        <property name="connection.url">jdbc:hsqldb:mem:hbmmanualtestdb;shutdown=true</property>
+        <property name="connection.url">jdbc:hsqldb:mem:hbmcoretestdb;shutdown=true</property>
         <property name="connection.username">SA</property>
-        <property name="connection.password"></property>
+        <property name="connection.password">SA</property>
         <!-- JDBC connection pool (use the built-in) -->
         <property name="connection.pool_size">1</property>
         <!-- SQL dialect -->

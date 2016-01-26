@@ -5,13 +5,13 @@
 
 SimpleDAO Hibernate Service Provider Interface - SPI Implementation.
 
-In test package was implemented a demo example using the SimpleDAO-Hibernate API. A demonstration where transactions are manually controlled using (beginTransaction, commitTransaction, rollbackTransaction, etc) and another using the SpringFramework using (@Transacional).
+In the test package was implemented two demo usage examples (Hibernate-Core and Hibernate-EntityManager) using the SimpleDAO-Hibernate API with SpringFramework and HikariCP connection pool.
 
 Requires JDK 1.6 or higher
 
 ## Latest release
 
-SimpleDAO-Hibernate bundle is available from [Maven Central](http://search.maven.org/).
+SimpleDAO-Hibernate is available from [Maven Central](http://search.maven.org/).
 
 To add a dependency using Maven, use the following:
 

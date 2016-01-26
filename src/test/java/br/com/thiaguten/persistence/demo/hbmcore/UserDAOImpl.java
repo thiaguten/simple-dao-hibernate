@@ -29,38 +29,46 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package br.com.thiaguten.persistence.demo.manual.hibernate.dao.provider;
+package br.com.thiaguten.persistence.demo.hbmcore;
 
+import br.com.thiaguten.persistence.dao.GenericBaseDAO;
+import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
-import br.com.thiaguten.persistence.demo.manual.AbstractPersistenceProviderManualTest;
-import br.com.thiaguten.persistence.demo.manual.hibernate.dao.UserDAOHibernateImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.annotations.BeforeClass;
+import br.com.thiaguten.persistence.spi.provider.hibernate.HibernateCriteriaPersistenceProvider;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
-/**
- * Hibernate persistence provider test
- *
- * @author Thiago Gutenberg
- */
-public class HibernatePersistenceProviderManualImplTest extends AbstractPersistenceProviderManualTest {
+import java.util.Collections;
+import java.util.List;
 
-    private static final Logger LOG = LoggerFactory.getLogger(HibernatePersistenceProviderManualImplTest.class);
+@Repository("userDAO")
+public class UserDAOImpl extends GenericBaseDAO<User, Long> implements UserDAO {
 
-    private static UserDAO userDAO;
+    private HibernateCriteriaPersistenceProvider persistenceProvider;
 
-    @BeforeClass
-    public static void init() {
-        LOG.info("***********************************************");
-        LOG.info("HIBERNATE CORE MANUAL - Transactions Management");
-        LOG.info("***********************************************");
+    @Override
+    public HibernateCriteriaPersistenceProvider getPersistenceProvider() {
+        return persistenceProvider;
+    }
 
-        userDAO = new UserDAOHibernateImpl();
+    @Autowired
+    @Qualifier("hibernatePersistenceProvider")
+    public void setPersistenceProvider(HibernateCriteriaPersistenceProvider persistenceProvider) {
+        this.persistenceProvider = persistenceProvider;
     }
 
     @Override
-    public UserDAO getUserDAO() {
-        return userDAO;
+    public List<User> findByName(String name) {
+        List<Criterion> criterions = Collections.singletonList(Restrictions.ilike("name", name, MatchMode.ANYWHERE));
+        List<User> results = persistenceProvider.findByCriteria(getEntityClass(), criterions);
+        if (results.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return Collections.unmodifiableList(results);
+        }
     }
-
 }

@@ -40,7 +40,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Define operation for a hibernate criteria persistence provider implementation.
+ * Adpater interface to define operation for a hibernate criteria persistence provider implementation.
  *
  * @author Thiago Gutenberg
  */
@@ -117,12 +117,12 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
     /**
      * Count by criteria
      *
-     * @param entityClazz the entity class
-     * @param resultClazz the result class
+     * @param entityClazz       the entity class
+     * @param resultClazz       the result class
      * @param resultTransformer strategy for transforming query results
-     * @param criterions  the criterions
-     * @param <T>         entity
-     * @param <N>         number pojo
+     * @param criterions        the criterions
+     * @param <T>               entity
+     * @param <N>               number pojo
      * @return the count
      */
     <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, ResultTransformer resultTransformer, List<Criterion> criterions);

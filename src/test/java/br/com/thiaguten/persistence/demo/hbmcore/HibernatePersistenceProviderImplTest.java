@@ -29,39 +29,68 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package br.com.thiaguten.persistence.demo.spring.hibernate.dao.provider;
+package br.com.thiaguten.persistence.demo.hbmcore;
 
+import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
-import br.com.thiaguten.persistence.demo.spring.AbstractPersistenceProviderSpringTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-/**
- * @author Thiago Gutenberg
- */
-@ContextConfiguration(locations = {"classpath:spring/persistence-hibernate-entitymanager-appContext.xml"})
-public class HibernateJpaPersistenceProviderSpringImplTest extends AbstractPersistenceProviderSpringTest {
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
-    private static final Logger LOG = LoggerFactory.getLogger(HibernateJpaPersistenceProviderSpringImplTest.class);
+@ContextConfiguration(locations = {"classpath:spring/persistence-hibernate-appContext.xml"})
+public class HibernatePersistenceProviderImplTest extends AbstractTransactionalTestNGSpringContextTests {
+
+    private static final Logger log = LoggerFactory.getLogger(HibernatePersistenceProviderImplTest.class);
 
     @Autowired
-    @Qualifier("userHibernateJpaDAO")
+    @Qualifier("userDAO")
     private UserDAO userDAO;
 
     @BeforeClass
     public static void init() {
-        LOG.info("**********************************************");
-        LOG.info("HIBERNATE JPA SPRING - Transactions Management");
-        LOG.info("**********************************************");
+        log.info("*********************");
+        log.info("HIBERNATE CORE SPRING");
+        log.info("*********************");
     }
 
-    @Override
-    public UserDAO getUserDAO() {
-        return userDAO;
+    @Test
+    public void crudTest() {
+        // create
+        User user = new User("THIAGO");
+        User userSave = userDAO.save(user);
+        log.info("Created: " + userSave);
+
+        // read
+        User userSavedFound = userDAO.findById(userSave.getId());
+        log.info("Read: " + userSavedFound);
+        assertEquals(userSavedFound.getName(), userSave.getName());
+
+        // update
+        userSavedFound.setName("VALENTINA");
+        User userUpdate = userDAO.update(userSavedFound);
+        log.info("Updated: " + userUpdate);
+
+        // read
+        User userUpdatedFound = userDAO.findById(userUpdate.getId());
+        log.info("Read: " + userUpdatedFound);
+        assertEquals(userUpdatedFound.getName(), userUpdate.getName());
+
+        // delete
+        userDAO.delete(userUpdate);
+        log.info("Deleted: " + userUpdate);
+
+        // read
+        User userDeleted = userDAO.findById(userUpdate.getId());
+        log.info("Read: " + userDeleted);
+        assertNull(userDeleted);
     }
 
 }
