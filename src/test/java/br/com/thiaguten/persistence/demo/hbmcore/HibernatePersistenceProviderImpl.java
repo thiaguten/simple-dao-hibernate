@@ -50,16 +50,16 @@ import java.util.Map;
 @Service("hibernatePersistenceProvider")
 public class HibernatePersistenceProviderImpl extends HibernatePersistenceProvider {
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
+
+    @Autowired
+    public HibernatePersistenceProviderImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public Session getSession() {
         return sessionFactory.getCurrentSession();
-    }
-
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     @Override

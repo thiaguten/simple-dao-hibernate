@@ -48,18 +48,18 @@ import java.util.List;
 @Repository("userDAO")
 public class UserDAOImpl extends GenericBaseDAO<User, Long> implements UserDAO {
 
-    private HibernateCriteriaPersistenceProvider persistenceProvider;
+    private final HibernateCriteriaPersistenceProvider persistenceProvider;
+
+    @Autowired
+    public UserDAOImpl(@Qualifier("hibernatePersistenceProvider") HibernateCriteriaPersistenceProvider persistenceProvider) {
+        this.persistenceProvider = persistenceProvider;
+    }
 
     @Override
     public HibernateCriteriaPersistenceProvider getPersistenceProvider() {
         return persistenceProvider;
     }
 
-    @Autowired
-    @Qualifier("hibernatePersistenceProvider")
-    public void setPersistenceProvider(HibernateCriteriaPersistenceProvider persistenceProvider) {
-        this.persistenceProvider = persistenceProvider;
-    }
 
     @Override
     public List<User> findByName(String name) {
