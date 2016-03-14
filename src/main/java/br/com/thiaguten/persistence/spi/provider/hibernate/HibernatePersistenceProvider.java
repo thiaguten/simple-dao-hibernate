@@ -373,18 +373,18 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
         return (N) criteria.setResultTransformer(resultTransformer).uniqueResult();
     }
 
-    @SuppressWarnings("unchecked")
     private <T extends Persistable<? extends Serializable>, PK extends Serializable> void deleteByEntityOrId(Class<T> entityClazz, T entity, PK pk) {
         if (pk == null && (entity == null || entity.getId() == null)) {
             throw new HibernateException("Could not delete. ID is null.");
         }
 
-        T t;
-        if (pk != null) {
-            t = findById(entityClazz, pk);
-        } else {
-            t = entity;
+        PK id = pk;
+        if (id == null) {
+            id = (PK) entity.getId();
         }
+
+        T t = (T) getSession().load(entityClazz, id);
+
         getSession().delete(t);
     }
 
