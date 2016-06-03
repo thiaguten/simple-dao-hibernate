@@ -38,21 +38,21 @@ import javax.persistence.EntityManager;
 /**
  * Hibernate EntityManager implementation of the PersistenceProvider.
  *
- * @author Thiago Gutenberg
+ * @author Thiago Gutenberg Carvalho da Costa
  */
 public abstract class HibernateJpaPersistenceProvider extends HibernatePersistenceProvider {
 
     /**
-     * Get entity manager
+     * Get the entity manager.
      *
-     * @return entity manager
+     * @return the entity manager
      */
     public abstract EntityManager getEntityManager();
 
     /**
-     * Get session
+     * Get the session.
      *
-     * @return session
+     * @return the session
      */
     @Override
     public final Session getSession() {

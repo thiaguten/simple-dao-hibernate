@@ -31,7 +31,7 @@
  */
 package br.com.thiaguten.persistence.spi.provider.hibernate;
 
-import br.com.thiaguten.persistence.Persistable;
+import br.com.thiaguten.persistence.core.Persistable;
 import br.com.thiaguten.persistence.spi.PersistenceProvider;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.transform.ResultTransformer;
@@ -42,12 +42,12 @@ import java.util.List;
 /**
  * Adpater interface to define operation for a hibernate criteria persistence provider implementation.
  *
- * @author Thiago Gutenberg
+ * @author Thiago Gutenberg Carvalho da Costa
  */
 public interface HibernateCriteriaPersistenceProvider extends PersistenceProvider {
 
     /**
-     * Find by criteria
+     * Find by criteria.
      *
      * @param entityClazz the entity class
      * @param criterions  the criterions
@@ -57,7 +57,7 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
     <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, List<Criterion> criterions);
 
     /**
-     * Find by criteria
+     * Find by criteria.
      *
      * @param entityClazz the entity class
      * @param criterions  the criterions
@@ -69,7 +69,7 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
     <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, int firstResult, int maxResults, List<Criterion> criterions);
 
     /**
-     * Find by criteria
+     * Find by criteria.
      *
      * @param entityClazz the entity class
      * @param criterions  the criterions
@@ -82,7 +82,7 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
     <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, boolean cacheable, int firstResult, int maxResults, List<Criterion> criterions);
 
     /**
-     * Find unique result by criteria
+     * Find unique result by criteria.
      *
      * @param entityClazz the entity class
      * @param criterions  the criterions
@@ -92,7 +92,7 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
     <T extends Persistable<? extends Serializable>> T findUniqueResultByCriteria(Class<T> entityClazz, List<Criterion> criterions);
 
     /**
-     * Find unique result by criteria
+     * Find unique result by criteria.
      *
      * @param entityClazz the entity class
      * @param criterions  the criterions
@@ -103,7 +103,7 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
     <T extends Persistable<? extends Serializable>> T findUniqueResultByCriteria(Class<T> entityClazz, boolean cacheable, List<Criterion> criterions);
 
     /**
-     * Count by criteria
+     * Count by criteria.
      *
      * @param entityClazz the entity class
      * @param resultClazz the result class
@@ -115,7 +115,7 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
     <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, List<Criterion> criterions);
 
     /**
-     * Count by criteria
+     * Count by criteria.
      *
      * @param entityClazz       the entity class
      * @param resultClazz       the result class
