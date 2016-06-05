@@ -31,7 +31,7 @@
  */
 package br.com.thiaguten.persistence.demo.hbmjpa;
 
-import br.com.thiaguten.persistence.core.GenericBasePersistence;
+import br.com.thiaguten.persistence.core.GenericPersistence;
 import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
 import br.com.thiaguten.persistence.spi.provider.hibernate.HibernateCriteriaPersistenceProvider;
@@ -46,7 +46,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Repository("userJpaDAO")
-public class UserDAOImpl extends GenericBasePersistence<Long, User> implements UserDAO {
+public class UserDAOImpl extends GenericPersistence<Long, User> implements UserDAO {
 
     private final HibernateCriteriaPersistenceProvider persistenceProvider;
 
