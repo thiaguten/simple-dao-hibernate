@@ -63,19 +63,19 @@ public class HibernateJpaPersistenceProviderImpl extends HibernateJpaPersistence
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public <T extends Persistable<? extends Serializable>> T save(T entity) {
+    public <ID extends Serializable, T extends Persistable<ID>> T save(T entity) {
         return super.save(entity);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public <T extends Persistable<? extends Serializable>> T update(T entity) {
+    public <ID extends Serializable, T extends Persistable<ID>> T update(T entity) {
         return super.update(entity);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public <T extends Persistable<? extends Serializable>> void delete(Class<T> entityClazz, T entity) {
+    public <ID extends Serializable, T extends Persistable<ID>> void delete(Class<T> entityClazz, T entity) {
         super.delete(entityClazz, entity);
     }
 
@@ -86,42 +86,37 @@ public class HibernateJpaPersistenceProviderImpl extends HibernateJpaPersistence
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, ResultTransformer resultTransformer, List<Criterion> criterions) {
-        return super.countByCriteria(entityClazz, resultClazz, resultTransformer, criterions);
-    }
-
-    @Override
     public <ID extends Serializable, T extends Persistable<ID>> T findById(Class<T> entityClazz, ID id) {
         return super.findById(entityClazz, id);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findAll(Class<T> entityClazz) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findAll(Class<T> entityClazz) {
         return super.findAll(entityClazz);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findAll(Class<T> entityClazz, int firstResult, int maxResults) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findAll(Class<T> entityClazz, int firstResult, int maxResults) {
         return super.findAll(entityClazz, firstResult, maxResults);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByNamedQuery(Class<T> entityClazz, String queryName, Object... params) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQuery(Class<T> entityClazz, String queryName, Object... params) {
         return super.findByNamedQuery(entityClazz, queryName, params);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByNamedQueryAndNamedParams(Class<T> entityClazz, String queryName, Map<String, ?> params) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQueryAndNamedParams(Class<T> entityClazz, String queryName, Map<String, ?> params) {
         return super.findByNamedQueryAndNamedParams(entityClazz, queryName, params);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByQueryAndNamedParams(Class<T> entityClazz, String query, Map<String, ?> params) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByQueryAndNamedParams(Class<T> entityClazz, String query, Map<String, ?> params) {
         return super.findByQueryAndNamedParams(entityClazz, query, params);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> long countAll(Class<T> entityClazz) {
+    public <ID extends Serializable, T extends Persistable<ID>> long countAll(Class<T> entityClazz) {
         return super.countAll(entityClazz);
     }
 
@@ -136,32 +131,37 @@ public class HibernateJpaPersistenceProviderImpl extends HibernateJpaPersistence
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByCriteria(Class<T> entityClazz, List<Criterion> criterions) {
         return super.findByCriteria(entityClazz, criterions);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, int firstResult, int maxResults, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByCriteria(Class<T> entityClazz, int firstResult, int maxResults, List<Criterion> criterions) {
         return super.findByCriteria(entityClazz, firstResult, maxResults, criterions);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, boolean cacheable, int firstResult, int maxResults, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByCriteria(Class<T> entityClazz, boolean cacheable, int firstResult, int maxResults, List<Criterion> criterions) {
         return super.findByCriteria(entityClazz, cacheable, firstResult, maxResults, criterions);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> T findUniqueResultByCriteria(Class<T> entityClazz, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> T findUniqueResultByCriteria(Class<T> entityClazz, List<Criterion> criterions) {
         return super.findUniqueResultByCriteria(entityClazz, criterions);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>> T findUniqueResultByCriteria(Class<T> entityClazz, boolean cacheable, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> T findUniqueResultByCriteria(Class<T> entityClazz, boolean cacheable, List<Criterion> criterions) {
         return super.findUniqueResultByCriteria(entityClazz, cacheable, criterions);
     }
 
     @Override
-    public <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, List<Criterion> criterions) {
         return super.countByCriteria(entityClazz, resultClazz, criterions);
+    }
+
+    @Override
+    public <ID extends Serializable, T extends Persistable<ID>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, ResultTransformer resultTransformer, List<Criterion> criterions) {
+        return super.countByCriteria(entityClazz, resultClazz, resultTransformer, criterions);
     }
 }

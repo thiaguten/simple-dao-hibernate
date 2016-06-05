@@ -51,10 +51,11 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
      *
      * @param entityClazz the entity class
      * @param criterions  the criterions
-     * @param <T>         entity
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
      * @return the list of entities
      */
-    <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, List<Criterion> criterions);
+    <ID extends Serializable, T extends Persistable<ID>> List<T> findByCriteria(Class<T> entityClazz, List<Criterion> criterions);
 
     /**
      * Find by criteria.
@@ -63,10 +64,11 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
      * @param criterions  the criterions
      * @param firstResult first result
      * @param maxResults  max result
-     * @param <T>         entity
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
      * @return the list of entities
      */
-    <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, int firstResult, int maxResults, List<Criterion> criterions);
+    <ID extends Serializable, T extends Persistable<ID>> List<T> findByCriteria(Class<T> entityClazz, int firstResult, int maxResults, List<Criterion> criterions);
 
     /**
      * Find by criteria.
@@ -76,20 +78,22 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
      * @param cacheable   cacheable
      * @param firstResult first result
      * @param maxResults  max result
-     * @param <T>         entity
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
      * @return the list of entities
      */
-    <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, boolean cacheable, int firstResult, int maxResults, List<Criterion> criterions);
+    <ID extends Serializable, T extends Persistable<ID>> List<T> findByCriteria(Class<T> entityClazz, boolean cacheable, int firstResult, int maxResults, List<Criterion> criterions);
 
     /**
      * Find unique result by criteria.
      *
      * @param entityClazz the entity class
      * @param criterions  the criterions
-     * @param <T>         entity
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
      * @return the entity
      */
-    <T extends Persistable<? extends Serializable>> T findUniqueResultByCriteria(Class<T> entityClazz, List<Criterion> criterions);
+    <ID extends Serializable, T extends Persistable<ID>> T findUniqueResultByCriteria(Class<T> entityClazz, List<Criterion> criterions);
 
     /**
      * Find unique result by criteria.
@@ -97,10 +101,11 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
      * @param entityClazz the entity class
      * @param criterions  the criterions
      * @param cacheable   cacheable
-     * @param <T>         entity
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
      * @return the entity
      */
-    <T extends Persistable<? extends Serializable>> T findUniqueResultByCriteria(Class<T> entityClazz, boolean cacheable, List<Criterion> criterions);
+    <ID extends Serializable, T extends Persistable<ID>> T findUniqueResultByCriteria(Class<T> entityClazz, boolean cacheable, List<Criterion> criterions);
 
     /**
      * Count by criteria.
@@ -108,11 +113,12 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
      * @param entityClazz the entity class
      * @param resultClazz the result class
      * @param criterions  the criterions
-     * @param <T>         entity
-     * @param <N>         number pojo
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
+     * @param <N>         the type of the count return
      * @return the count
      */
-    <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, List<Criterion> criterions);
+    <ID extends Serializable, T extends Persistable<ID>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, List<Criterion> criterions);
 
     /**
      * Count by criteria.
@@ -121,9 +127,10 @@ public interface HibernateCriteriaPersistenceProvider extends PersistenceProvide
      * @param resultClazz       the result class
      * @param resultTransformer strategy for transforming query results
      * @param criterions        the criterions
-     * @param <T>               entity
-     * @param <N>               number pojo
+     * @param <ID>              the type of the identifier
+     * @param <T>               the type of the entity
+     * @param <N>               the type of the count return
      * @return the count
      */
-    <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, ResultTransformer resultTransformer, List<Criterion> criterions);
+    <ID extends Serializable, T extends Persistable<ID>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, ResultTransformer resultTransformer, List<Criterion> criterions);
 }

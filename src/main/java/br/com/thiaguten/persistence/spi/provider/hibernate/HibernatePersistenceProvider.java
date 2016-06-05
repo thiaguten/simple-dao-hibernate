@@ -71,7 +71,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findAll(Class<T> entityClazz) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findAll(Class<T> entityClazz) {
         return findByCriteria(entityClazz, null);
     }
 
@@ -79,7 +79,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findAll(Class<T> entityClazz, int firstResult, int maxResults) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findAll(Class<T> entityClazz, int firstResult, int maxResults) {
         return findByCriteria(entityClazz, firstResult, maxResults, null);
     }
 
@@ -87,7 +87,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByNamedQuery(Class<T> entityClazz, String queryName, Object... params) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQuery(Class<T> entityClazz, String queryName, Object... params) {
         Query hibernateQuery = getSession().getNamedQuery(queryName);
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
@@ -101,7 +101,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByNamedQueryAndNamedParams(Class<T> entityClazz, String queryName, Map<String, ?> params) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQueryAndNamedParams(Class<T> entityClazz, String queryName, Map<String, ?> params) {
         Query hibernateQuery = getSession().getNamedQuery(queryName);
         if (params != null && !params.isEmpty()) {
             for (final Map.Entry<String, ?> param : params.entrySet()) {
@@ -115,7 +115,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByQueryAndNamedParams(Class<T> entityClazz, String query, Map<String, ?> params) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByQueryAndNamedParams(Class<T> entityClazz, String query, Map<String, ?> params) {
         Query hibernateQuery = getSession().createQuery(query);
         if (params != null && !params.isEmpty()) {
             for (final Map.Entry<String, ?> param : params.entrySet()) {
@@ -129,7 +129,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> long countAll(Class<T> entityClazz) {
+    public <ID extends Serializable, T extends Persistable<ID>> long countAll(Class<T> entityClazz) {
         return countByCriteria(entityClazz, Long.class, null);
     }
 
@@ -165,12 +165,12 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> T save(T entity) {
-        Serializable id = entity.getId();
+    public <ID extends Serializable, T extends Persistable<ID>> T save(T entity) {
+        ID id = entity.getId();
         if (id != null) {
             getSession().saveOrUpdate(entity);
         } else {
-            id = getSession().save(entity);
+            id = (ID) getSession().save(entity);
         }
         entity = (T) findById(entity.getClass(), id);
         return entity;
@@ -180,7 +180,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> T update(T entity) {
+    public <ID extends Serializable, T extends Persistable<ID>> T update(T entity) {
         return save(entity);
     }
 
@@ -188,7 +188,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> void delete(Class<T> entityClazz, T entity) {
+    public <ID extends Serializable, T extends Persistable<ID>> void delete(Class<T> entityClazz, T entity) {
         deleteByEntityOrId(entityClazz, entity, null);
     }
 
@@ -204,7 +204,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByCriteria(Class<T> entityClazz, List<Criterion> criterions) {
         return findByCriteria(entityClazz, -1, -1, criterions);
     }
 
@@ -212,7 +212,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, int firstResult, int maxResults, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByCriteria(Class<T> entityClazz, int firstResult, int maxResults, List<Criterion> criterions) {
         return findByCriteria(entityClazz, false, firstResult, maxResults, criterions);
     }
 
@@ -220,7 +220,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> List<T> findByCriteria(Class<T> entityClazz, boolean cacheable, int firstResult, int maxResults, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByCriteria(Class<T> entityClazz, boolean cacheable, int firstResult, int maxResults, List<Criterion> criterions) {
         Criteria criteria = getSession().createCriteria(entityClazz);
         if (criterions != null) {
             for (Criterion c : criterions) {
@@ -234,7 +234,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> T findUniqueResultByCriteria(Class<T> entityClazz, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> T findUniqueResultByCriteria(Class<T> entityClazz, List<Criterion> criterions) {
         return findUniqueResultByCriteria(entityClazz, false, criterions);
     }
 
@@ -242,7 +242,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>> T findUniqueResultByCriteria(Class<T> entityClazz, boolean cacheable, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>> T findUniqueResultByCriteria(Class<T> entityClazz, boolean cacheable, List<Criterion> criterions) {
         Criteria criteria = getSession().createCriteria(entityClazz);
         if (criterions != null) {
             for (Criterion c : criterions) {
@@ -256,7 +256,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, List<Criterion> criterions) {
         return countByCriteria(entityClazz, resultClazz, Criteria.DISTINCT_ROOT_ENTITY, criterions);
     }
 
@@ -264,7 +264,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      * {@inheritDoc}
      */
     @Override
-    public <T extends Persistable<? extends Serializable>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, ResultTransformer resultTransformer, List<Criterion> criterions) {
+    public <ID extends Serializable, T extends Persistable<ID>, N extends Number> N countByCriteria(Class<T> entityClazz, Class<N> resultClazz, ResultTransformer resultTransformer, List<Criterion> criterions) {
         Criteria criteria = getSession().createCriteria(entityClazz);
         criteria.setProjection(Projections.rowCount());
         if (criterions != null) {
@@ -275,14 +275,14 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
         return (N) criteria.setResultTransformer(resultTransformer).uniqueResult();
     }
 
-    private <ID extends Serializable, T extends Persistable<? extends Serializable>> void deleteByEntityOrId(Class<T> entityClazz, T entity, ID id) {
+    private <ID extends Serializable, T extends Persistable<ID>> void deleteByEntityOrId(Class<T> entityClazz, T entity, ID id) {
         if (id == null && (entity == null || entity.getId() == null)) {
             throw new HibernateException("Could not delete. ID is null.");
         }
 
         ID _id = id;
         if (_id == null) {
-            _id = (ID) entity.getId();
+            _id = entity.getId();
         }
 
         T t = (T) getSession().load(entityClazz, _id);
