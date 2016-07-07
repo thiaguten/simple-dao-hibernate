@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/thiaguten/simple-dao-hibernate.svg)](https://travis-ci.org/thiaguten/simple-dao-hibernate)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/br.com.thiaguten.persistence/simple-dao-hibernate/badge.svg)](https://maven-badges.herokuapp.com/maven-central/br.com.thiaguten.persistence/simple-dao-hibernate)
+[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/br.com.thiaguten.persistence/simple-dao-hibernate/badge.svg)](http://www.javadoc.io/doc/br.com.thiaguten.persistence/simple-dao-hibernate)
+[![License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)](https://www.apache.org/licenses/LICENSE-2.0.html)
+[![Dependency Status](https://www.versioneye.com/user/projects/577e7c2d5bb1390038414381/badge.svg)](https://www.versioneye.com/user/projects/577e7c2d5bb1390038414381)
 
 SimpleDAO Hibernate Implementation.
 
