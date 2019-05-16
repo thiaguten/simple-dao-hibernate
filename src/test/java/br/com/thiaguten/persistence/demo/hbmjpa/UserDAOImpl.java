@@ -21,10 +21,8 @@ package br.com.thiaguten.persistence.demo.hbmjpa;
 import br.com.thiaguten.persistence.core.BasePersistence;
 import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
-import br.com.thiaguten.persistence.spi.provider.hibernate.HibernateCriteriaPersistenceProvider;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
+import br.com.thiaguten.persistence.spi.PersistenceProvider;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -35,24 +33,22 @@ import java.util.List;
 @Repository("userJpaDAO")
 public class UserDAOImpl extends BasePersistence<Long, User> implements UserDAO {
 
-    private final HibernateCriteriaPersistenceProvider persistenceProvider;
+    private final PersistenceProvider persistenceProvider;
 
     @Autowired
-    public UserDAOImpl(@Qualifier("hibernateJpaPersistenceProvider") HibernateCriteriaPersistenceProvider persistenceProvider) {
+    public UserDAOImpl(@Qualifier("hibernateJpaPersistenceProvider") PersistenceProvider persistenceProvider) {
         this.persistenceProvider = persistenceProvider;
     }
 
     @Override
-    public HibernateCriteriaPersistenceProvider getPersistenceProvider() {
+    public PersistenceProvider getPersistenceProvider() {
         return persistenceProvider;
     }
 
-
     @Override
     public List<User> findByName(String name) {
-        List<Criterion> criterions = Collections.singletonList(Restrictions.ilike("name", name, MatchMode.ANYWHERE));
-        List<User> results = persistenceProvider.findByCriteria(getPersistenceClass(), criterions);
-        if (results.isEmpty()) {
+    	List<User> results = getPersistenceProvider().findByQuery(getPersistenceClass(), "from User u where lower(u.name) like ?1", name.toLowerCase());
+        if (null == results || results.isEmpty()) {
             return Collections.emptyList();
         } else {
             return Collections.unmodifiableList(results);

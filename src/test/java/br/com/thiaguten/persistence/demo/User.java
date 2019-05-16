@@ -27,9 +27,11 @@ import javax.persistence.*;
 @Table(name = "USER")
 public class User implements Persistable<Long>, Versionable { // Versionable is optional
 
+	private static final long serialVersionUID = 1555012463948780977L;
+
     @Id
     @Column(name = "ID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "NAME", nullable = false)
@@ -37,7 +39,7 @@ public class User implements Persistable<Long>, Versionable { // Versionable is 
 
     @Version
     @Column(name = "VERSION")
-    private long version;
+    private Long version;
 
     public User() {
         super();
@@ -65,11 +67,11 @@ public class User implements Persistable<Long>, Versionable { // Versionable is 
     }
 
     @Override
-    public long getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(long version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 

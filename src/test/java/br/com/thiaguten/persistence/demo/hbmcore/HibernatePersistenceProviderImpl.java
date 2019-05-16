@@ -33,7 +33,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 @Service("hibernatePersistenceProvider")
 public class HibernatePersistenceProviderImpl extends HibernatePersistenceProvider {
 

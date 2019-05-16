@@ -20,6 +20,7 @@ package br.com.thiaguten.persistence.spi.provider.hibernate;
 
 import br.com.thiaguten.persistence.core.Persistable;
 import br.com.thiaguten.persistence.spi.PersistenceProvider;
+
 import org.hibernate.criterion.Criterion;
 import org.hibernate.transform.ResultTransformer;
 

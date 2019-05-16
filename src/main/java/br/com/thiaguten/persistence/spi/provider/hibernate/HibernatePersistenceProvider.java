@@ -19,6 +19,8 @@
 package br.com.thiaguten.persistence.spi.provider.hibernate;
 
 import br.com.thiaguten.persistence.core.Persistable;
+import br.com.thiaguten.persistence.spi.PersistenceProvider;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -37,7 +39,7 @@ import java.util.Map;
  * @author Thiago Gutenberg Carvalho da Costa
  */
 @SuppressWarnings("unchecked")
-public abstract class HibernatePersistenceProvider implements HibernateCriteriaPersistenceProvider {
+public abstract class HibernatePersistenceProvider implements HibernateCriteriaPersistenceProvider, PersistenceProvider {
 
     /**
      * Get session
@@ -51,7 +53,7 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      */
     @Override
     public <ID extends Serializable, T extends Persistable<ID>> T findById(Class<T> entityClazz, ID id) {
-        return (T) getSession().get(entityClazz, id);
+        return getSession().get(entityClazz, id);
     }
 
     /**
@@ -73,12 +75,28 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
     /**
      * {@inheritDoc}
      */
-    @Override
-    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQuery(Class<T> entityClazz, String queryName, Object... params) {
-        Query hibernateQuery = getSession().getNamedQuery(queryName);
+	@Override
+	public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQuery(Class<T> entityClazz, String queryName, Object... params) {
+        return findByNamedQuery(entityClazz, false, queryName, params);
+	}
+
+	/**
+     * Find by named query.
+     *
+     * @param entityClazz the entity class
+     * @param cacheable   enable query cache
+     * @param queryName   the name of the query
+     * @param params      the query parameters
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
+     * @return the list of entities
+     */
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQuery(Class<T> entityClazz, boolean cacheable, String queryName, Object... params) {
+    	Query hibernateQuery = getSession().getNamedQuery(queryName);
+    	hibernateQuery.setCacheable(cacheable);
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
-                hibernateQuery.setParameter(i + 1, params[i]);
+                hibernateQuery.setParameter(i, params[i]); // HQL Positional Parameters starts from 0
             }
         }
         return hibernateQuery.list();
@@ -89,10 +107,54 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      */
     @Override
     public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQueryAndNamedParams(Class<T> entityClazz, String queryName, Map<String, ?> params) {
-        Query hibernateQuery = getSession().getNamedQuery(queryName);
-        if (params != null && !params.isEmpty()) {
-            for (final Map.Entry<String, ?> param : params.entrySet()) {
-                hibernateQuery.setParameter(param.getKey(), param.getValue());
+        return findByNamedQueryAndNamedParams(entityClazz, false, queryName, params);
+    }
+
+    /**
+     * Find by named query.
+     *
+     * @param entityClazz the entity class
+     * @param cacheable   enable query cache
+     * @param queryName   the name of the query
+     * @param params      the query parameters
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
+     * @return the list of entities
+     */
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQueryAndNamedParams(Class<T> entityClazz, boolean cacheable, String queryName, Map<String, ?> params) {
+    	Query hibernateQuery = getSession().getNamedQuery(queryName);
+        hibernateQuery.setCacheable(cacheable);
+        if (params != null) {
+        	params.forEach(hibernateQuery::setParameter);
+        }
+        return hibernateQuery.list();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <ID extends Serializable, T extends Persistable<ID>> List<T> findByQuery(Class<T> entityClazz, String query, Object... params) {
+    	return findByQuery(entityClazz, false, query, params);
+    }
+
+    /**
+     * Find by query (JPQL/HQL, etc).
+     *
+     * @param entityClazz the entity class
+     * @param cacheable   enable query cache
+     * @param query       the query string
+     * @param params      the query parameters
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
+     * @return the list of entities
+     */
+	public <ID extends Serializable, T extends Persistable<ID>> List<T> findByQuery(Class<T> entityClazz, boolean cacheable, String query, Object... params) {
+		Query hibernateQuery = getSession().createQuery(query);
+    	hibernateQuery.setCacheable(cacheable);
+    	if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                hibernateQuery.setParameter(i, params[i]); // HQL Positional Parameters starts from 0
             }
         }
         return hibernateQuery.list();
@@ -103,11 +165,25 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      */
     @Override
     public <ID extends Serializable, T extends Persistable<ID>> List<T> findByQueryAndNamedParams(Class<T> entityClazz, String query, Map<String, ?> params) {
-        Query hibernateQuery = getSession().createQuery(query);
-        if (params != null && !params.isEmpty()) {
-            for (final Map.Entry<String, ?> param : params.entrySet()) {
-                hibernateQuery.setParameter(param.getKey(), param.getValue());
-            }
+    	return findByQueryAndNamedParams(entityClazz, false, query, params);
+    }
+
+    /**
+     * Find by query (JPQL/HQL, etc) and parameters.
+     *
+     * @param entityClazz the entity class
+     * @param cacheable   enable query cache
+     * @param query       the query string
+     * @param params      the query parameters
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
+     * @return the list of entities
+     */
+	public <ID extends Serializable, T extends Persistable<ID>> List<T> findByQueryAndNamedParams(Class<T> entityClazz, boolean cacheable, String query, Map<String, ?> params) {
+		Query hibernateQuery = getSession().createQuery(query);
+    	hibernateQuery.setCacheable(cacheable);
+        if (params != null) {
+        	params.forEach(hibernateQuery::setParameter);
         }
         return hibernateQuery.list();
     }
@@ -125,11 +201,9 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
      */
     @Override
     public <T extends Number> T countByNamedQueryAndNamedParams(Class<T> resultClazz, String queryName, Map<String, ?> params) {
-        Query hibernateQuery = getSession().getNamedQuery(queryName);
-        if (params != null && !params.isEmpty()) {
-            for (final Map.Entry<String, ?> param : params.entrySet()) {
-                hibernateQuery.setParameter(param.getKey(), param.getValue());
-            }
+    	Query hibernateQuery = getSession().getNamedQuery(queryName);
+        if (params != null) {
+        	params.forEach(hibernateQuery::setParameter);
         }
         return (T) hibernateQuery.uniqueResult();
     }
@@ -140,10 +214,8 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
     @Override
     public <T extends Number> T countByQueryAndNamedParams(Class<T> resultClazz, String query, Map<String, ?> params) {
         Query hibernateQuery = getSession().createQuery(query);
-        if (params != null && !params.isEmpty()) {
-            for (final Map.Entry<String, ?> param : params.entrySet()) {
-                hibernateQuery.setParameter(param.getKey(), param.getValue());
-            }
+        if (params != null) {
+        	params.forEach(hibernateQuery::setParameter);
         }
         return (T) hibernateQuery.uniqueResult();
     }
@@ -154,12 +226,17 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
     @Override
     public <ID extends Serializable, T extends Persistable<ID>> T save(T entity) {
         ID id = entity.getId();
+        
         if (id != null) {
             getSession().saveOrUpdate(entity);
         } else {
             id = (ID) getSession().save(entity);
         }
-        entity = (T) findById(entity.getClass(), id);
+        
+//        Class<T> entityClazz = (Class<T>) entity.getClass();
+//        T t = getSession().load(entityClazz, id);
+        
+//        return t;
         return entity;
     }
 
@@ -187,6 +264,30 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
         deleteByEntityOrId(entityClazz, null, id);
     }
 
+    /**
+     * Delete an entity by its identifier.
+     * 
+     * @param <ID>        the type of the identifier
+     * @param <T>         the type of the entity
+     * @param entityClazz the entity class
+     * @param entity      the type of the entity
+     * @param id          the entity identifier
+     */
+    public <ID extends Serializable, T extends Persistable<ID>> void deleteByEntityOrId(Class<T> entityClazz, T entity, ID id) {
+        if (id == null && (entity == null || entity.getId() == null)) {
+            throw new HibernateException("Could not delete. ID is null.");
+        }
+
+        ID _id = id;
+        if (_id == null) {
+            _id = entity.getId();
+        }
+
+        T t = getSession().load(entityClazz, _id);
+
+        getSession().delete(t);
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -260,21 +361,6 @@ public abstract class HibernatePersistenceProvider implements HibernateCriteriaP
             }
         }
         return (N) criteria.setResultTransformer(resultTransformer).uniqueResult();
-    }
-
-    private <ID extends Serializable, T extends Persistable<ID>> void deleteByEntityOrId(Class<T> entityClazz, T entity, ID id) {
-        if (id == null && (entity == null || entity.getId() == null)) {
-            throw new HibernateException("Could not delete. ID is null.");
-        }
-
-        ID _id = id;
-        if (_id == null) {
-            _id = entity.getId();
-        }
-
-        T t = (T) getSession().load(entityClazz, _id);
-
-        getSession().delete(t);
     }
 
     private Criteria criteriaRange(Criteria criteria, int firstResult, int maxResults) {

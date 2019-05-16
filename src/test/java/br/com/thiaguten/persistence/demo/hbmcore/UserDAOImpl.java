@@ -22,6 +22,7 @@ import br.com.thiaguten.persistence.core.BasePersistence;
 import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
 import br.com.thiaguten.persistence.spi.provider.hibernate.HibernateCriteriaPersistenceProvider;
+
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -51,8 +52,8 @@ public class UserDAOImpl extends BasePersistence<Long, User> implements UserDAO 
     @Override
     public List<User> findByName(String name) {
         List<Criterion> criterions = Collections.singletonList(Restrictions.ilike("name", name, MatchMode.ANYWHERE));
-        List<User> results = persistenceProvider.findByCriteria(getPersistenceClass(), criterions);
-        if (results.isEmpty()) {
+        List<User> results = getPersistenceProvider().findByCriteria(getPersistenceClass(), criterions);
+        if (null == results || results.isEmpty()) {
             return Collections.emptyList();
         } else {
             return Collections.unmodifiableList(results);

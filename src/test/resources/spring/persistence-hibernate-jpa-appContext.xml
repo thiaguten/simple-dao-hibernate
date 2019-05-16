@@ -24,7 +24,6 @@
         <property name="poolName" value="HibernateJpaSpringHikariCP"/>
 
         <property name="maximumPoolSize" value="100"/>
-        <property name="idleTimeout" value="30000"/>
         <property name="connectionTestQuery" value="SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES"/>
 
         <property name="dataSourceClassName" value="org.hsqldb.jdbc.JDBCDataSource"/>
@@ -46,7 +45,6 @@
         <property name="dataSource" ref="dataSource"/>
         <!--<property name="persistenceUnitName" value="hibernateJpaPU"/>-->
         <property name="packagesToScan" value="br.com.thiaguten.persistence.demo"/>
-        <!--<property name="loadTimeWeaver" ref="loadTimeWeaver"/>-->
         <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
         <property name="jpaProperties">
             <props>
@@ -59,9 +57,7 @@
         </property>
     </bean>
 
-    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-        <property name="databasePlatform" value="org.eclipse.persistence.platform.database.HSQLPlatform"/>
-    </bean>
+    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 
     <bean id="jpaTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <constructor-arg ref="entityManagerFactory"/>

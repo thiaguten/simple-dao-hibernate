@@ -24,7 +24,6 @@
         <property name="poolName" value="HibernateCoreSpringHikariCP"/>
 
         <property name="maximumPoolSize" value="100"/>
-        <property name="idleTimeout" value="30000"/>
         <property name="connectionTestQuery" value="SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES"/>
 
         <property name="dataSourceClassName" value="org.hsqldb.jdbc.JDBCDataSource"/>
@@ -42,7 +41,7 @@
     </bean>
 
     <!-- Hibernate SessionFactory configuration -->
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <!--
             Cant use this config because hibernate.current_session_context_class interferes with Spring-managed transactions
@@ -61,7 +60,7 @@
         </property>
     </bean>
 
-    <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
