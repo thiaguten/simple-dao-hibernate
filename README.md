@@ -10,4 +10,4 @@ SimpleDAO Hibernate Implementation.
 
 In the test package was implemented two demo usage examples (Hibernate-Core and Hibernate-EntityManager) using the SimpleDAO-Hibernate API with SpringFramework and HikariCP connection pool.
 
-Requires JDK 1.6 or higher.
+Requires JDK 1.8 or higher.
