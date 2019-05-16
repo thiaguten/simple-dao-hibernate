@@ -53,18 +53,23 @@
         <tag>HEAD</tag>
     </scm>
 
-    <!-- http://www.slf4j.org/faq.html#excludingJCL -->
     <repositories>
+        <!-- http://www.slf4j.org/faq.html#excludingJCL -->
         <repository>
             <id>commons-logging-empty</id>
             <name>empty artifacts for commons-logging and log4j</name>
             <url>http://version99.qos.ch/</url>
         </repository>
+        <repository>
+            <id>ossrh</id>
+            <name>ossrh snapshot repo</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
     </repositories>
 
-    <!-- fix for springframework logging -->
     <dependencyManagement>
         <dependencies>
+            <!-- fix for springframework logging -->
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
