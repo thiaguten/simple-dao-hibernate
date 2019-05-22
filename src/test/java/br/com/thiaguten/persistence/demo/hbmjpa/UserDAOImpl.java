@@ -23,6 +23,7 @@ import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
 import br.com.thiaguten.persistence.spi.PersistenceProvider;
 
+import br.com.thiaguten.persistence.spi.provider.hibernate.HibernateJpaPersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -33,21 +34,21 @@ import java.util.List;
 @Repository("userJpaDAO")
 public class UserDAOImpl extends BasePersistence<Long, User> implements UserDAO {
 
-    private final PersistenceProvider persistenceProvider;
+    private final HibernateJpaPersistenceProvider persistenceProvider;
 
     @Autowired
-    public UserDAOImpl(@Qualifier("hibernateJpaPersistenceProvider") PersistenceProvider persistenceProvider) {
+    public UserDAOImpl(@Qualifier("hibernateJpaPersistenceProvider") HibernateJpaPersistenceProvider persistenceProvider) {
         this.persistenceProvider = persistenceProvider;
     }
 
     @Override
-    public PersistenceProvider getPersistenceProvider() {
+    public HibernateJpaPersistenceProvider getPersistenceProvider() {
         return persistenceProvider;
     }
 
     @Override
     public List<User> findByName(String name) {
-    	List<User> results = getPersistenceProvider().findByQuery(getPersistenceClass(), "from User u where lower(u.name) like ?1", name.toLowerCase());
+    	List<User> results = persistenceProvider.findByQuery(getPersistenceClass(), "from User u where lower(u.name) like ?1", name.toLowerCase());
         if (null == results || results.isEmpty()) {
             return Collections.emptyList();
         } else {

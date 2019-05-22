@@ -19,7 +19,7 @@
 package br.com.thiaguten.persistence.demo.hbmcore;
 
 import br.com.thiaguten.persistence.core.Persistable;
-import br.com.thiaguten.persistence.spi.provider.hibernate.HibernatePersistenceProvider;
+import br.com.thiaguten.persistence.spi.provider.hibernate.AbstractHibernatePersistenceProvider;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
@@ -35,7 +35,7 @@ import java.util.Map;
 
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 @Service("hibernatePersistenceProvider")
-public class HibernatePersistenceProviderImpl extends HibernatePersistenceProvider {
+public class HibernatePersistenceProviderImpl extends AbstractHibernatePersistenceProvider {
 
     private final SessionFactory sessionFactory;
 
@@ -71,6 +71,12 @@ public class HibernatePersistenceProviderImpl extends HibernatePersistenceProvid
     @Transactional(propagation = Propagation.REQUIRED)
     public <ID extends Serializable, T extends Persistable<ID>> void deleteById(Class<T> entityClazz, ID id) {
         super.deleteById(entityClazz, id);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public <ID extends Serializable, T extends Persistable<ID>> void deleteByEntityOrId(Class<T> entityClazz, T entity, ID id) {
+        super.deleteByEntityOrId(entityClazz, entity, id);
     }
 
     @Override

@@ -19,7 +19,7 @@
 package br.com.thiaguten.persistence.demo.hbmjpa;
 
 import br.com.thiaguten.persistence.core.Persistable;
-import br.com.thiaguten.persistence.spi.provider.hibernate.HibernateJpaPersistenceProvider;
+import br.com.thiaguten.persistence.spi.provider.hibernate.AbstractHibernateJpaPersistenceProvider;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 @Service("hibernateJpaPersistenceProvider")
-public class HibernateJpaPersistenceProviderImpl extends HibernateJpaPersistenceProvider {
+public class HibernateJpaPersistenceProviderImpl extends AbstractHibernateJpaPersistenceProvider {
 
     private EntityManager entityManager;
 
@@ -70,6 +70,12 @@ public class HibernateJpaPersistenceProviderImpl extends HibernateJpaPersistence
     @Transactional(propagation = Propagation.REQUIRED)
     public <ID extends Serializable, T extends Persistable<ID>> void deleteById(Class<T> entityClazz, ID id) {
         super.deleteById(entityClazz, id);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public <ID extends Serializable, T extends Persistable<ID>> void deleteByEntityOrId(Class<T> entityClazz, T entity, ID id) {
+        super.deleteByEntityOrId(entityClazz, entity, id);
     }
 
     @Override

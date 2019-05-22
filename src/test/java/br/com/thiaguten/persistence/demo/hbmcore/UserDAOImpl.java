@@ -21,8 +21,9 @@ package br.com.thiaguten.persistence.demo.hbmcore;
 import br.com.thiaguten.persistence.core.BasePersistence;
 import br.com.thiaguten.persistence.demo.User;
 import br.com.thiaguten.persistence.demo.UserDAO;
-import br.com.thiaguten.persistence.spi.provider.hibernate.HibernateCriteriaPersistenceProvider;
-
+import br.com.thiaguten.persistence.spi.provider.hibernate.HibernatePersistenceProvider;
+import java.util.Collections;
+import java.util.List;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -30,21 +31,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.List;
-
 @Repository("userDAO")
 public class UserDAOImpl extends BasePersistence<Long, User> implements UserDAO {
 
-    private final HibernateCriteriaPersistenceProvider persistenceProvider;
+    private final HibernatePersistenceProvider persistenceProvider;
 
     @Autowired
-    public UserDAOImpl(@Qualifier("hibernatePersistenceProvider") HibernateCriteriaPersistenceProvider persistenceProvider) {
+    public UserDAOImpl(@Qualifier("hibernatePersistenceProvider") HibernatePersistenceProvider persistenceProvider) {
         this.persistenceProvider = persistenceProvider;
     }
 
     @Override
-    public HibernateCriteriaPersistenceProvider getPersistenceProvider() {
+    public HibernatePersistenceProvider getPersistenceProvider() {
         return persistenceProvider;
     }
 
@@ -52,7 +50,7 @@ public class UserDAOImpl extends BasePersistence<Long, User> implements UserDAO 
     @Override
     public List<User> findByName(String name) {
         List<Criterion> criterions = Collections.singletonList(Restrictions.ilike("name", name, MatchMode.ANYWHERE));
-        List<User> results = getPersistenceProvider().findByCriteria(getPersistenceClass(), criterions);
+        List<User> results = persistenceProvider.findByCriteria(getPersistenceClass(), criterions);
         if (null == results || results.isEmpty()) {
             return Collections.emptyList();
         } else {
