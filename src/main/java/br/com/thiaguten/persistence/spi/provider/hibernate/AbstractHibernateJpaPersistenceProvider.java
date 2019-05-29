@@ -19,6 +19,7 @@
 package br.com.thiaguten.persistence.spi.provider.hibernate;
 
 import org.hibernate.Session;
+import org.hibernate.jpa.QueryHints;
 
 import br.com.thiaguten.persistence.core.Persistable;
 
@@ -26,7 +27,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -100,7 +100,7 @@ public abstract class AbstractHibernateJpaPersistenceProvider
   public <ID extends Serializable, T extends Persistable<ID>> List<T> findByQuery(
       Class<T> entityClazz, boolean cacheable, String query, Object... params) {
     TypedQuery<T> typedQuery = getEntityManager().createQuery(query, entityClazz);
-    typedQuery.setHint("org.hibernate.cacheable", String.valueOf(cacheable));
+    typedQuery.setHint(QueryHints.HINT_CACHEABLE, String.valueOf(cacheable));
     if (params != null) {
       for (int i = 0; i < params.length; i++) {
         typedQuery.setParameter(i + 1, params[i]); // JPQL Positional Parameters starts from 1
@@ -116,7 +116,7 @@ public abstract class AbstractHibernateJpaPersistenceProvider
   public <ID extends Serializable, T extends Persistable<ID>> List<T> findByQueryAndNamedParams(
       Class<T> entityClazz, boolean cacheable, String query, Map<String, ?> params) {
     TypedQuery<T> typedQuery = getEntityManager().createQuery(query, entityClazz);
-    typedQuery.setHint("org.hibernate.cacheable", String.valueOf(cacheable));
+    typedQuery.setHint(QueryHints.HINT_CACHEABLE, String.valueOf(cacheable));
     if (params != null) {
       params.forEach(typedQuery::setParameter);
     }
@@ -130,7 +130,7 @@ public abstract class AbstractHibernateJpaPersistenceProvider
   public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQuery(
       Class<T> entityClazz, boolean cacheable, String queryName, Object... params) {
     TypedQuery<T> typedQuery = getEntityManager().createNamedQuery(queryName, entityClazz);
-    typedQuery.setHint("org.hibernate.cacheable", String.valueOf(cacheable));
+    typedQuery.setHint(QueryHints.HINT_CACHEABLE, String.valueOf(cacheable));
     if (params != null) {
       for (int i = 0; i < params.length; i++) {
         typedQuery.setParameter(i + 1, params[i]); // JPQL Positional Parameters starts from 1
@@ -146,7 +146,7 @@ public abstract class AbstractHibernateJpaPersistenceProvider
   public <ID extends Serializable, T extends Persistable<ID>> List<T> findByNamedQueryAndNamedParams(
       Class<T> entityClazz, boolean cacheable, String queryName, Map<String, ?> params) {
     TypedQuery<T> typedQuery = getEntityManager().createNamedQuery(queryName, entityClazz);
-    typedQuery.setHint("org.hibernate.cacheable", String.valueOf(cacheable));
+    typedQuery.setHint(QueryHints.HINT_CACHEABLE, String.valueOf(cacheable));
     if (params != null) {
       params.forEach(typedQuery::setParameter);
     }
