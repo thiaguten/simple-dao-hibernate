@@ -319,7 +319,7 @@
         <simple-dao.version>3.0.0</simple-dao.version>
         <hibernate.version>5.1.17.Final</hibernate.version>
         <slf4j.version>1.7.26</slf4j.version>
-        <logback.version>1.1.7</logback.version>
+        <logback.version>1.2.0</logback.version>
         <testng.version>6.14.3</testng.version>
         <hsqldb.version>2.4.1</hsqldb.version>
         <hikaricp.version>3.3.1</hikaricp.version>
